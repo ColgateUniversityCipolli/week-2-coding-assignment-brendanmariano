@@ -68,7 +68,7 @@ mid.points <- (left.points+right.points)/2
   \item Write code that computes the area using the Trapezoidial Rule.\\
   \textbf{Solution:}
 <<size="scriptsize", warning=FALSE, message=FALSE>>=
-# Write code for answer here.
+(trap.area = 1/2*(left.area + right.area))
 @
   \item Write a function that takes \texttt{a}, \texttt{b}, and number of 
   rectangles (\texttt{n.rect}) in as input and returns the Trapezoidial Rule 
@@ -98,9 +98,17 @@ riemann.sums <- function(fnct,                        # function to integrate
   # Compute Area
   ######################################
   if(method == "Left"){
-    # Add necessary code here
+    increments.x = (upper-lower)/n.rect
+    for(i in n.rect)
+      print(i)
+      area = area + increments.x(func(lower + i/n.rect))
+      
+    fnct
   }else if(method == "Right"){
-    # Add necessary code here
+    increments.x = (upper-lower)/n.rect
+    for(i in 1:n.rect)
+      print(i)
+      area = area + increments.x(func(lower + i/n.rect + n.rect))
   }else if(method == "Midpoint"){
     # Add necessary code here
   }else if(method == "Trapezoidial"){
