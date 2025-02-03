@@ -68,7 +68,9 @@ mid.points <- (left.points+right.points)/2
   \item Write code that computes the area using the Trapezoidial Rule.\\
   \textbf{Solution:}
 <<size="scriptsize", warning=FALSE, message=FALSE>>=
-(trap.area = 1/2*(left.area + right.area))
+right.vals = integrand(right.points)
+left.vals = integrand(left.points)
+(trap.area = sum(delta.x*(right.vals + left.vals)/2))
 @
   \item Write a function that takes \texttt{a}, \texttt{b}, and number of 
   rectangles (\texttt{n.rect}) in as input and returns the Trapezoidial Rule 
@@ -76,7 +78,7 @@ mid.points <- (left.points+right.points)/2
   skeleton below. When you are done, remove \texttt{eval=FALSE} to show that
   the function provides the expected result for the example above.\\
   \textbf{Solution:}
-<<eval=FALSE, size="scriptsize", warning=FALSE, message=FALSE>>=
+<<eval=TRUE, size="scriptsize", warning=FALSE, message=FALSE>>=
 riemann.sums <- function(fnct,                        # function to integrate
                          a,                           # lower bound of integral
                          b,                           # upper bound of integral
@@ -98,21 +100,36 @@ riemann.sums <- function(fnct,                        # function to integrate
   # Compute Area
   ######################################
   if(method == "Left"){
-    increments.x = (upper-lower)/n.rect
-    for(i in n.rect)
-      print(i)
-      area = area + increments.x(func(lower + i/n.rect))
+    #Pre-established points that are used
+    #Used sum function in order to sum every computed rectangle
+    area = 0
+    increments.x = (b-a)/n.rect
+    left.points = a + 0:99*(increments.x)
+      area = sum(increments.x*(fnct(left.points)))
       
-    fnct
   }else if(method == "Right"){
-    increments.x = (upper-lower)/n.rect
-    for(i in 1:n.rect)
-      print(i)
-      area = area + increments.x(func(lower + i/n.rect + n.rect))
-  }else if(method == "Midpoint"){
-    # Add necessary code here
+    increments.x = (b-a)/n.rect
+    right.points = a + 1:100*(increments.x)
+    area = sum(increments.x*(fnct(right.points)))
+      
+  }else if(method == "Midpoint")
+    {
+    #Used same idea as above but had to calculate both right and left values for each interval to find the midpoint Riemann Sum
+    increments.x = (b-a)/n.rect
+    right.points = a + 1:100*(increments.x)
+    left.points = a + 0:99*(increments.x)
+    mid.points = a + (left.points + right.points)/2
+    area = sum(increments.x*(fnct(mid.points)))
   }else if(method == "Trapezoidial"){
-    # Add necessary code here
+     #Averages the two values, multiplies by the width and that adds to area 
+    #Used sum function to add all of the trapezoids
+      increments.x = (b-a)/n.rect
+      right.points = a + 1:100*(increments.x)
+    left.points = a + 0:99*(increments.x)
+      left.vals = (fnct(left.points))
+      right.vals = (fnct(right.points))
+      
+      area = sum((increments.x*(left.vals + right.vals))/2)
   }else{
     stop("Please select a valid method (e.g., 'Left', 'Right', 'Midpoint', 'Trapezoidial')")
   }
